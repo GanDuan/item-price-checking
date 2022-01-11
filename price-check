@@ -1,0 +1,30 @@
+import requests
+from bs4 import BeautifulSoup
+import smtplib
+
+my_email = MY-EMAIL
+password = MY-PASSWORD
+receiver = RECEIVER
+
+#TODO check price from amazon
+url = item-url
+header = {
+    "User-Agent": user-agent,
+    "Accept-Language": accept-language,
+}
+
+response = requests.get(url=url, headers=header)
+response.status_code
+result = response.text
+
+soup = BeautifulSoup(result, "html.parser")
+content = soup.find(name="span", class_="a-offscreen")
+price = float(content.getText().split("$")[1])
+
+# TODO email when price is low
+if price < 320:
+    with smtplib.SMTP("smtp.gmail.com", port=587) as co:
+        co.starttls()
+        co.login(user=my_email, password=password)
+        co.sendmail(from_addr=my_email, to_addrs=receiver, msg=f"Subject:Price Dropped!\n\n The item you are looking for is only ${price} now")
+
